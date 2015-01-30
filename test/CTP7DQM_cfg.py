@@ -33,7 +33,7 @@ process.dqmSaver.workflow = cms.untracked.string('/L1TMonitor/Calo/CTP7')
 process.l1tctp7 = cms.EDAnalyzer("L1TCTP7",
     DQMStore = cms.untracked.bool(True),
     disableROOToutput = cms.untracked.bool(False),
-    outputFile = cms.untracked.string('./CTP7DQM_other.root'),
+    outputFile = cms.untracked.string('./CTP7DQM.root'),
     ctp7Source = cms.InputTag("ctp7ToDigi"),
     verbose = cms.untracked.bool(False),
     filterTriggerType  = cms.int32(-1)
@@ -50,8 +50,8 @@ process.ctp7link = cms.EDAnalyzer("LinkDQM",
 
 #This creates DQM-compatible plots
 #process.p = cms.Path(process.l1tctp7+process.dqmSaver)
-process.p = cms.Path(process.ctp7link+process.dqmSaver)
-#process.p = cms.Path(process.l1tctp7+process.ctp7link+process.dqmSaver)
+#process.p = cms.Path(process.ctp7link+process.dqmSaver)
+process.p = cms.Path(process.l1tctp7+process.ctp7link+process.dqmSaver)
 
 
 # For faster debugging & extra couts we can also work with a standard analyzer
