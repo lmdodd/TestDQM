@@ -62,6 +62,9 @@ private:
 
   //CTP7 Link information
   MonitorElement* ctp7LinkMonitor_;
+  MonitorElement* ctp7LinkMonitorNot15_;
+  MonitorElement* ctp7LinkMonitor2D_;
+  MonitorElement* ctp7LinkMonitorNot15_2D_;
 
   int nev_; // Number of events processed
   std::string outputFile_; //file name for ROOT ouput

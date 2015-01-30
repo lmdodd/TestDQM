@@ -9,6 +9,7 @@ until [  $COUNTER -gt 1 ]; do
     # Plot
     root -b -q fastplotter.C >& plots.log 
     root -b -q pumplotter.C >& pumplots.log 
+    root -b -q linkplotter.C >& linkplots.log 
     
     # Format for web
    

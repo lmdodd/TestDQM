@@ -44,7 +44,7 @@ process.ctp7link = cms.EDAnalyzer("LinkDQM",
     disableROOToutput = cms.untracked.bool(False),
     outputFile = cms.untracked.string('./CTP7DQM_link.root'),
     ctp7Source = cms.InputTag("ctp7ToDigi"),
-    verbose = cms.untracked.bool(True)
+    verbose = cms.untracked.bool(False)
 )
 
 

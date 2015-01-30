@@ -18,10 +18,11 @@ const unsigned int R10BINS = 1024;
 const float R10MIN = -0.5;
 const float R10MAX = 1023.5;
 
-const unsigned int NLINKS = 36;
-const float NLINKSMIN = -0;
-const float NLINKSMAX = 35.5;
+const unsigned int NILINKS = 36;
+const float NILINKSMIN = -0;
+const float NILINKSMAX = 35.5;
 
+const unsigned int NUINT = 7e4;
 LinkDQM::LinkDQM(const ParameterSet & ps) :
 	ctp7Source_LMCollection_( consumes<LinkMonitorCollection>(ps.getParameter< InputTag >("ctp7Source") ))
 {
@@ -89,7 +90,13 @@ void LinkDQM::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
 
 		// global regions
 		ctp7LinkMonitor_ = 
-			dbe->book2D("RctLinkMonitor", "LINK MONITOR", NLinks, 0 , NLinks);
+			dbe->book1D("RctLinkMonitor", "LINK MONITOR",NUINT, 0.,NUINT );
+		ctp7LinkMonitorNot15_ = 
+			dbe->book1D("RctLinkMonitorNot15", "LINK MONITOR NOT 0xf",NUINT,0., NUINT);
+		ctp7LinkMonitor2D_ = 
+			dbe->book2D("RctLinkMonitor2D", "LINK MONITOR 2D", NILINKS, NILINKSMIN, NILINKSMAX,2,-0.5,1.5);
+		ctp7LinkMonitorNot15_2D_ = 
+			dbe->book2D("RctLinkMonitorNot15_2D", "LINK MONITOR 2D Not 0xf", NILINKS, NILINKSMIN, NILINKSMAX,NUINT,0.,NUINT);
 
 	}
 }
@@ -125,8 +132,20 @@ void LinkDQM::analyze(const Event & e, const EventSetup & c)
 	}
 
 	if ( doLm ) {
+                int i =0;
 		for (LinkMonitorCollection::const_iterator link = lm->begin(); link != lm->end(); link++) {
 			ctp7LinkMonitor_->Fill(link->raw());
+		        if (link->raw()!=15) {
+			        ctp7LinkMonitor2D_->Fill(i,1);
+			        ctp7LinkMonitorNot15_->Fill(link->raw());
+			        ctp7LinkMonitorNot15_2D_->Fill(i,link->raw());
+				std::cout<<"Link: "<<i<<" is not 15!"<<std::endl;
+				std::cout<<"Link: "<<i<<" is "<< link->raw()<<std::endl;
+                         }	
+			else{
+			        ctp7LinkMonitor2D_->Fill(i,0);
+			}
+			i++;
 		}
 	}
 }
