@@ -5,12 +5,12 @@ process.load("DQMServices.Core.DQM_cfg")
 process.load("DQMServices.Components.DQMEnvironment_cfi")
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(64)
 )
 
 process.source = cms.Source("PoolSource",
                             fileNames = cms.untracked.vstring(
-    'file:CTP7ToDigi.root'
+    'file:../../CreateRCTPatternsMC/rct.root'
     #'file:keep/ttbar64.root' 
     #'file:keep/stangepatterncard6.root' 
 )
@@ -27,31 +27,19 @@ process.MessageLogger = cms.Service("MessageLogger",
     )
 )
 
-
 process.dqmSaver.workflow = cms.untracked.string('/L1TMonitor/Calo/CTP7')
 
 process.l1tctp7 = cms.EDAnalyzer("L1TCTP7",
     DQMStore = cms.untracked.bool(True),
     disableROOToutput = cms.untracked.bool(False),
-    outputFile = cms.untracked.string('./CTP7DQM.root'),
-    ctp7Source = cms.InputTag("ctp7ToDigi"),
+    outputFile = cms.untracked.string('./CTP7DQMMC.root'),
+    ctp7Source = cms.InputTag("simRctDigis"),
     verbose = cms.untracked.bool(False),
     filterTriggerType  = cms.int32(-1)
 )
 
-process.ctp7link = cms.EDAnalyzer("LinkDQM",
-    DQMStore = cms.untracked.bool(True),
-    disableROOToutput = cms.untracked.bool(False),
-    outputFile = cms.untracked.string('./CTP7DQM_link.root'),
-    ctp7Source = cms.InputTag("ctp7ToDigi"),
-    verbose = cms.untracked.bool(True)
-)
-
-
 #This creates DQM-compatible plots
-#process.p = cms.Path(process.l1tctp7+process.dqmSaver)
-#process.p = cms.Path(process.ctp7link+process.dqmSaver)
-process.p = cms.Path(process.l1tctp7+process.ctp7link+process.dqmSaver)
+process.p = cms.Path(process.l1tctp7+process.dqmSaver)
 
 
 # For faster debugging & extra couts we can also work with a standard analyzer

@@ -18,10 +18,15 @@ void fastplotter(TString fileName="CTP7DQM.root"){
  doHisto("RctEmIsoEmRank","EmIso Rank",false);;
  doHisto("RctEmNonIsoEmRank","EmNonIso Rank",false);;
  doHisto("RctRegionRank","Regions Rank",false);;
+ doHisto("RctRegionRank","Regions Rank Zoomed",false,false,true);;
+ doHisto("RctBitMipEtaPhi","Mip Bit");
+ doHisto("RctBitOverFlowEtaPhi", "Overflow bit");
+ doHisto("RctBitQuietEtaPhi", "Quiet bit");
+ doHisto("RctBitTauVetoEtaPhi", "TauVeto bit");
 }
 
 //doPUM option used in pumplotter.cc
-void doHisto(TString name="RctBitHfPlusTauEtaPhi", TString label="Test", bool do2D=true, bool doPUM=false){
+void doHisto(TString name="RctBitHfPlusTauEtaPhi", TString label="Test", bool do2D=true, bool doPUM=false, bool doZoom=false){
  TCanvas* C1= new TCanvas("T"+name);
  TH1F *histo=(TH1F*)file0->Get("DQMData/L1T/L1TCTP7/"+name);
  if(do2D) {
@@ -36,6 +41,16 @@ void doHisto(TString name="RctBitHfPlusTauEtaPhi", TString label="Test", bool do
           histo->SetYTitle("Rank");
           histo->SetTitle(label);
  }
+ else if(doZoom){
+          histo->Draw("hist");
+          name=name+"_zoom";
+          histo->SetName(name);
+          histo->SetXTitle("Rank");
+          histo->SetTitle(label);
+          histo->SetYTitle("Events");
+          histo->SetLineWidth(2);
+          histo->GetXaxis()->SetRangeUser(0,50);
+ }
  else     {histo->Draw("hist"); 
            C1->SetLogy(true); 
           histo->SetXTitle("RANK");  
@@ -43,6 +58,8 @@ void doHisto(TString name="RctBitHfPlusTauEtaPhi", TString label="Test", bool do
           histo->SetLineWidth(2);
           histo->SetTitle(label);
  }
+
+
  C1->SaveAs(name+".png");
 if (doPUM) doProfile(name,"Avg "+label);;
 }
